@@ -2,8 +2,9 @@ package phone
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPhoneNumber(t *testing.T) {
@@ -18,6 +19,7 @@ func TestPhoneNumber(t *testing.T) {
 			{"+00351961111111", false},
 			{"+ 351961111111", false},
 			{"+351 96111 1111", true},
+			{"+351	96111 1111", true},
 			{"351t61111111", false},
 			{"351+61111111", false},
 			{"351611p1111", false},

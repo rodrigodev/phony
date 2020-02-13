@@ -16,7 +16,7 @@ func Sanitize(s string) (string, bool) {
 		return string(r) == "0" || !unicode.IsNumber(r)
 	})
 
-	s = strings.Replace(s, " ", "", -1)
+	s = removeWhiteSpaceStringsBuilder(s)
 
 	reg, err := regexp.Compile("^[0-9]+$")
 	if err != nil {
@@ -34,4 +34,15 @@ func Sanitize(s string) (string, bool) {
 	}
 
 	return "", false
+}
+
+func removeWhiteSpaceStringsBuilder(str string) string {
+	var b strings.Builder
+	b.Grow(len(str))
+	for _, ch := range str {
+		if !unicode.IsSpace(ch) {
+			b.WriteRune(ch)
+		}
+	}
+	return b.String()
 }

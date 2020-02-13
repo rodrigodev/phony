@@ -13,4 +13,4 @@ lint: get-linter
 	golangci-lint run
 
 get-linter:
-    command -v golangci-lint || curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b ${GOPATH}/bin v1.17.1
+    command -v golangci-lint || curl -sfL "https://install.goreleaser.com/github.com/golangci/golangci-lint.sh" | sh -s -- -b $(go env GOPATH)/bin v1.18.0

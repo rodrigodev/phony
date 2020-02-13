@@ -3,11 +3,11 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/armon/go-radix"
-	. "github.com/phony/internal/phone"
-	"io/ioutil"
 	"os"
-	"strings"
+
+	"github.com/armon/go-radix"
+
+	. "github.com/phony/internal/phone"
 )
 
 func main() {
@@ -20,44 +20,47 @@ func main() {
 		os.Exit(1)
 	}
 
-	file, err := os.Open("./area_codes.txt")
-	if err != nil {
-		fmt.Print(err)
-	}
-	defer file.Close()
-
-	content, err := ioutil.ReadFile(phoneNumbersFile)
-	if err != nil {
-		fmt.Print(err)
-	}
-	potentialPhoneNumbers := strings.Split(string(content), "\n")
-
-	scanner := bufio.NewScanner(file)
-
 	r := radix.New()
 
-	for scanner.Scan() {
-		r.Insert(scanner.Text(), 0)
+	// Reads all the file
+	areaCodes, err := os.Open("./area_codes.txt")
+	if err != nil {
+		fmt.Print(err)
+	}
+	defer areaCodes.Close()
+
+	codeScanner := bufio.NewScanner(areaCodes)
+
+	v := 0
+	for codeScanner.Scan() {
+		r.Insert(codeScanner.Text(), v)
+		v += 1
 	}
 
-	for _, number := range potentialPhoneNumbers {
-		n, valid := Sanitize(number)
+	potentialPhoneNumbers, err := os.Open(phoneNumbersFile)
+	if err != nil {
+		fmt.Print(err)
+	}
+	defer potentialPhoneNumbers.Close()
+
+	numbersScanner := bufio.NewScanner(potentialPhoneNumbers)
+
+	result := make(map[string]int)
+	for numbersScanner.Scan() {
+		n, valid := Sanitize(numbersScanner.Text())
 		if !valid {
 			continue
 		}
 
-		// alternative method to find matches
-		m, v, b := r.LongestPrefix(n)
+		m, _, b := r.LongestPrefix(n)
 		if b {
-			r.Insert(m, v.(int)+1)
+			result[m] = result[m] + 1
 		}
 	}
 
-	printer := func(s string, v interface{}) bool {
-		if v.(int) > 0 {
-			fmt.Printf("%s:%d\n", s, v)
+	for p, v := range result {
+		if v > 0 {
+			fmt.Printf("%s:%d\n", p, v)
 		}
-		return false
 	}
-	r.Walk(printer)
 }
