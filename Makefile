@@ -2,6 +2,9 @@
 
 default: build
 
+run: build
+	./app phones.txt
+
 build: test
 	go build -o ./app ./cmd
 

@@ -1,10 +1,8 @@
 ### Dependencies:
 * go
-* dep
 
 ### Installation
-* `dep ensure`
-* `make build`
+* `$ go mod vendor`
 
 ### Running
-`app input_file.txt`
+* `$ make run`

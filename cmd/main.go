@@ -6,8 +6,7 @@ import (
 	"os"
 
 	"github.com/armon/go-radix"
-
-	. "github.com/phony/internal/phone"
+	. "github.com/rodrigodev/phony/internal/phone"
 )
 
 func main() {
